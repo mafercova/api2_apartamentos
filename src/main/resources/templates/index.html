@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Resumen')}"></head>
+<body class="app-body">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<div th:replace="~{fragments/layout :: alerts}"></div>
+<main class="app-shell py-5">
+    <section class="hero-band mb-5">
+        <div>
+            <p class="eyebrow">CENTRO DE OPERACIONES</p>
+            <h1>Todo tu centro de operaciones,<br><span>en una sola mirada.</span></h1>
+            <p class="hero-copy">Administra propiedades, clientes y disponibilidad desde un espacio claro y conectado.</p>
+        </div>
+        <div class="hero-note"><span class="status-dot"></span><span>Panel operativo activo</span></div>
+    </section>
+    <section class="row g-3 mb-5">
+        <div class="col-md-3">
+            <div class="metric-panel metric-coral"><span class="metric-label">PROPIEDADES REGISTRADAS</span><strong th:text="${propiedadesTotal}">0</strong><a th:href="@{/propiedades}">Ver inventario <span>↗</span></a></div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-panel metric-ink"><span class="metric-label">CLIENTES REGISTRADOS</span><strong th:text="${clientesTotal}">0</strong><a th:href="@{/clientes}">Ver clientes <span>↗</span></a></div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-panel metric-mint"><span class="metric-label">RESERVAS REGISTRADAS</span><strong th:text="${reservasTotal}">0</strong><a th:href="@{/reservas}">Ver reservas <span>↗</span></a></div>
+        </div>
+        <div class="col-md-3">
+            <div class="metric-panel metric-payment"><span class="metric-label">PAGOS REGISTRADOS</span><strong th:text="${pagosTotal}">0</strong><a th:href="@{/pagos}">Ver pagos <span>↗</span></a></div>
+        </div>
+    </section>
+    <section class="row g-5">
+        <div class="col-lg-7">
+            <div class="section-heading"><div><p class="eyebrow">INVENTARIO</p><h2>Propiedades recientes</h2></div><a class="text-link" th:href="@{/propiedades}">Ver todas →</a></div>
+            <div th:if="${#lists.isEmpty(propiedadesRecientes)}" class="empty-state">Todavía no hay propiedades registradas.</div>
+            <div th:each="propiedad : ${propiedadesRecientes}" class="list-row">
+                <div class="property-avatar" th:text="${#strings.substring(propiedad.titulo, 0, 1).toUpperCase()}">P</div>
+                <div class="flex-grow-1"><strong th:text="${propiedad.titulo}">Propiedad</strong><small th:text="${propiedad.ciudad + ' · ' + propiedad.tipo}">Ciudad · Tipo</small></div>
+                <span class="badge-status" th:text="${propiedad.estado}">DISPONIBLE</span>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="section-heading"><div><p class="eyebrow">CONTACTOS</p><h2>Clientes recientes</h2></div><a class="text-link" th:href="@{/clientes}">Ver todos →</a></div>
+            <div th:if="${#lists.isEmpty(clientesRecientes)}" class="empty-state">Todavía no hay clientes registrados.</div>
+            <div th:each="cliente : ${clientesRecientes}" class="list-row">
+                <div class="initials" th:text="${#strings.substring(cliente.nombres, 0, 1) + #strings.substring(cliente.apellidos, 0, 1)}">CL</div>
+                <div class="flex-grow-1"><strong th:text="${cliente.nombres + ' ' + cliente.apellidos}">Cliente</strong><small th:text="${cliente.email}">email</small></div>
+            </div>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<script th:replace="~{fragments/layout :: scripts}"></script>
+</body>
+</html>

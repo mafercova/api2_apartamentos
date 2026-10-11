@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Unidades rentables')}"></head>
+<body class="app-body">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<div th:replace="~{fragments/layout :: alerts}"></div>
+<main class="app-shell py-5">
+    <div class="page-header"><div><p class="eyebrow">INVENTARIO</p><h1>Unidades rentables</h1><p class="page-lede" th:text="${propiedadFiltro != null ? 'Unidades de ' + propiedadFiltro.titulo : 'Espacios que pueden reservarse de forma independiente.'}">Espacios rentables.</p></div><a class="btn btn-accent" th:href="@{/unidades/nueva}">+ Nueva unidad</a></div>
+    <div class="table-wrap"><table class="table align-middle mb-0"><thead><tr><th>Unidad</th><th>Propiedad</th><th>Tipo</th><th>Capacidad</th><th>Precio por noche</th><th>Estado</th><th class="text-end">Acciones</th></tr></thead><tbody>
+        <tr th:if="${#lists.isEmpty(unidades)}"><td colspan="7" class="empty-table">No hay unidades rentables para mostrar.</td></tr>
+        <tr th:each="unidad : ${unidades}"><td><strong th:text="${unidad.nombre}">Unidad</strong></td><td th:text="${unidad.propiedad.titulo}">Propiedad</td><td th:text="${unidad.tipo}">TIPO</td><td th:text="${unidad.capacidad + ' huéspedes'}">0 huéspedes</td><td th:text="${'$' + unidad.precioNoche}">$0</td><td><span class="badge-status" th:text="${unidad.estado}">DISPONIBLE</span></td><td class="text-end"><a class="action-link" th:href="@{/unidades/{id}/editar(id=${unidad.idUnidad})}">Editar</a><form class="d-inline" th:action="@{/unidades/{id}/eliminar(id=${unidad.idUnidad})}" method="post"><button class="action-link action-danger" type="submit">Eliminar</button></form></td></tr>
+    </tbody></table></div>
+</main><footer th:replace="~{fragments/layout :: footer}"></footer><script th:replace="~{fragments/layout :: scripts}"></script>
+</body></html>

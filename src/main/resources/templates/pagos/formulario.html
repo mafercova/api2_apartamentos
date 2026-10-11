@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${modo} + ' pago')}"></head>
+<body class="app-body">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<div th:replace="~{fragments/layout :: alerts}"></div>
+<main class="app-shell py-5 form-page">
+    <a class="back-link" th:href="@{/pagos}">← Volver a pagos</a>
+    <div class="page-header compact"><div><p class="eyebrow">CONTROL FINANCIERO</p><h1 th:text="${modo + ' pago'}">Registrar pago</h1><p class="page-lede">La reserva determina el cliente y limita el importe disponible.</p></div></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <form class="form-surface" th:object="${pago}" th:action="${modo == 'Crear'} ? @{/pagos} : @{/pagos/{id}(id=${pago.idPago})}" method="post">
+        <div class="row g-4">
+            <div class="col-12"><label class="form-label">Reserva</label><select class="form-select" name="reservaId" required><option value="">Selecciona una reserva</option><option th:each="reserva : ${reservas}" th:value="${reserva.idReservacion}" th:selected="${pago.reserva != null and pago.reserva.idReservacion == reserva.idReservacion}" th:text="${'#' + reserva.idReservacion + ' · ' + reserva.cliente.nombres + ' ' + reserva.cliente.apellidos + ' · $' + reserva.importeTotal}"></option></select></div>
+            <div class="col-md-6"><label class="form-label">Importe</label><input class="form-control" type="number" min="0.01" step="0.01" th:field="*{importe}" required><small class="form-hint">No puede superar el total pendiente de la reserva.</small></div>
+            <div class="col-md-6"><label class="form-label">Fecha de vencimiento</label><input class="form-control" type="date" th:field="*{fechaVencimiento}" required></div>
+            <div class="col-md-6"><label class="form-label">Método de pago</label><select class="form-select" th:field="*{metodo}" required><option th:each="metodo : ${T(com.api.apartamentos.models.PagosModel.MetodoPago).values()}" th:value="${metodo}" th:text="${metodo}"></option></select></div>
+            <div class="col-md-6" th:if="${modo == 'Editar'}"><label class="form-label">Estado</label><select class="form-select" th:field="*{estado}"><option th:each="estado : ${T(com.api.apartamentos.models.PagosModel.EstadoPago).values()}" th:value="${estado}" th:text="${estado}"></option></select></div>
+        </div>
+        <div class="form-actions"><a class="btn btn-light" th:href="@{/pagos}">Cancelar</a><button class="btn btn-accent" type="submit" th:text="${modo + ' pago'}">Guardar</button></div>
+    </form>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer><script th:replace="~{fragments/layout :: scripts}"></script>
+</body>
+</html>
