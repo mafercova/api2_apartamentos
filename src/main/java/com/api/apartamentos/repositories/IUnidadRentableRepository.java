@@ -6,6 +6,10 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import com.api.apartamentos.models.UnidadRentableModel;
 
 public interface IUnidadRentableRepository extends JpaRepository<UnidadRentableModel, Long> {
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @org.springframework.data.jpa.repository.Query("select u from UnidadRentableModel u where u.idUnidad = :id")
+    java.util.Optional<UnidadRentableModel> bloquearPorId(@org.springframework.data.repository.query.Param("id") Long id);
+
     @Override
     @EntityGraph(attributePaths = "propiedad")
     List<UnidadRentableModel> findAll();

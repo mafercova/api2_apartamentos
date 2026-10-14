@@ -51,9 +51,9 @@ public class ClienteModel {
     @Enumerated(EnumType.STRING)
     @Column(name = "estatus", nullable = false, length = 15)
     private ClienteStatus estatus = ClienteStatus.ACTIVO;
-    @JsonIgnore
+    @com.fasterxml.jackson.annotation.JsonProperty(access = com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password", nullable = false, length = 255)
-    @NotBlank
+    @NotBlank(groups = Creacion.class)
     private String password;
 
     @PrePersist
@@ -62,6 +62,8 @@ public class ClienteModel {
         if (estatus == null) estatus = ClienteStatus.ACTIVO;
         if (tipo == null) tipo = TipoCliente.CLIENTE;
     }
+
+    public interface Creacion extends jakarta.validation.groups.Default {}
 
     public enum ClienteStatus { ACTIVO, INACTIVO, SUSPENDIDO }
     public enum TipoCliente { PROPIETARIO, CLIENTE, EMPRESA }

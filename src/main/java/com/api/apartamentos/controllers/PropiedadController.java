@@ -95,10 +95,8 @@ public class PropiedadController {
             return ResponseEntity.notFound().build();
         }
     }
-    
-    // ACTIVIDAD: Crea un metodo para Recuperar propiedades por tipo
 
-    // ACTIVIDAD: Crea un metodo para Recuoperar todas propiedades de un Propietario
+
 
     
 }

@@ -56,6 +56,8 @@ public class WebController {
     @GetMapping("/clientes")
     public String clientes(Model model) {
         model.addAttribute("clientes", clienteService.findAll());
+        model.addAttribute("cliente", new ClienteModel());
+        model.addAttribute("modo", "Crear");
         return "clientes/lista";
     }
 
@@ -67,7 +69,7 @@ public class WebController {
     }
 
     @PostMapping("/clientes")
-    public String crearCliente(@Valid @ModelAttribute("cliente") ClienteModel cliente,
+    public String crearCliente(@org.springframework.validation.annotation.Validated(ClienteModel.Creacion.class) @ModelAttribute("cliente") ClienteModel cliente,
             BindingResult result, RedirectAttributes redirectAttributes, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("modo", "Crear");
@@ -132,6 +134,9 @@ public class WebController {
     @GetMapping("/propiedades")
     public String propiedades(Model model) {
         model.addAttribute("propiedades", propiedadService.findAll());
+        model.addAttribute("propiedad", new PropiedadModel());
+        model.addAttribute("clientes", clienteService.findAll());
+        model.addAttribute("modo", "Crear");
         return "propiedades/lista";
     }
 
@@ -219,6 +224,7 @@ public class WebController {
     public String unidades(Model model) {
         model.addAttribute("unidades", unidadRentableService.findAll());
         model.addAttribute("propiedadFiltro", null);
+        prepararFormularioUnidad(model, new com.api.apartamentos.models.UnidadRentableModel(), "Crear");
         return "unidades/lista";
     }
 
@@ -231,6 +237,9 @@ public class WebController {
         }
         model.addAttribute("unidades", unidadRentableService.findByPropiedad(id));
         model.addAttribute("propiedadFiltro", propiedad.get());
+        var nueva = new com.api.apartamentos.models.UnidadRentableModel();
+        nueva.setPropiedad(propiedad.get());
+        prepararFormularioUnidad(model, nueva, "Crear");
         return "unidades/lista";
     }
 
@@ -319,6 +328,7 @@ public class WebController {
     @GetMapping("/reservas")
     public String reservas(Model model) {
         model.addAttribute("reservas", reservaService.findAll());
+        prepararFormularioReserva(model, new ReservaModel(), "Crear");
         return "reservas/lista";
     }
 
@@ -411,6 +421,9 @@ public class WebController {
     @GetMapping("/pagos")
     public String pagos(Model model) {
         model.addAttribute("pagos", pagosService.findAll());
+        PagosModel nuevo = new PagosModel();
+        nuevo.setFechaVencimiento(java.time.LocalDate.now().plusDays(1));
+        prepararFormularioPago(model, nuevo, "Crear");
         return "pagos/lista";
     }
 
@@ -463,11 +476,8 @@ public class WebController {
             redirectAttributes.addFlashAttribute("error", "No se pudo actualizar el pago.");
             return "redirect:/pagos";
         }
-        PagosModel pago = existente.get();
-        pago.setImporte(datos.getImporte());
-        pago.setFechaVencimiento(datos.getFechaVencimiento());
-        pago.setMetodo(datos.getMetodo());
-        pago.setEstado(datos.getEstado());
+        PagosModel pago = datos;
+        pago.setIdPago(id);
         pago.setReserva(reserva.get());
         try {
             pagosService.save(pago);

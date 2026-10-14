@@ -35,7 +35,7 @@ public class ClienteController {
 
     // Crear un nuevo cliente
     @PostMapping
-    public ClienteModel createCliente(@Valid @RequestBody ClienteModel cliente) {
+    public ClienteModel createCliente(@org.springframework.validation.annotation.Validated(ClienteModel.Creacion.class) @RequestBody ClienteModel cliente) {
         return clienteService.saveCliente(cliente);
     }
 

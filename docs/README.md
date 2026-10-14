@@ -1,47 +1,59 @@
 # Pruebas de la API
 
-Los cuerpos JSON de cada entidad estan en `docs/json/`.
+Instrucciones de instalación y arranque en ../README.md. La API funciona en http://localhost:8000/api.
 
-## Orden recomendado
+## Orden
 
-1. Cliente
-2. Propiedad
-3. Propiedad imagen y unidad rentable
-4. Disponibilidad
-5. Reserva
-6. Pago
-7. Resena y notificacion
+Cliente propietario → cliente arrendatario → propiedad → unidad → disponibilidad opcional → reserva → pago → reportes.
 
-Los IDs usados en los ejemplos son valores de referencia. Sustituyelos por los IDs reales devueltos por cada respuesta `POST`.
+Los ejemplos usan IDs ficticios; sustituirlos por los IDs devueltos por cada POST. Enviar JSON con Content-Type: application/json. También se puede realizar el flujo principal desde el frontend.
 
-## Probar desde VS Code
+Crear un cliente con POST /api/clientes:
 
-Abre `docs/pruebas-api.http` y usa la extension REST Client o el boton `Send Request` de VS Code.
-
-Antes, inicia la aplicacion:
-
-```text
-./mvnw spring-boot:run
+```json
+{"tipo":"CLIENTE","nombres":"Ana","apellidos":"Pérez","email":"ana@example.com","password":"ejemplo-local","telefono":"2290000000","estatus":"ACTIVO"}
 ```
 
-La API queda disponible en `http://localhost:8000`.
+Para un propietario usar tipo PROPIETARIO. Las contraseñas no aparecen en las respuestas.
 
-## Probar con curl
+Crear una propiedad con POST /api/propiedades:
 
-Ejemplo para crear un cliente:
-
-```bash
-curl -X POST http://localhost:8000/api/clientes \\
-  -H 'Content-Type: application/json' \\
-  --data @docs/json/cliente.json
+```json
+{"propietario":{"id":1},"tipo":"CASA","titulo":"Casa jardín","descripcion":"Casa de dos habitaciones","direccion":"Calle de ejemplo 10","ciudad":"Veracruz","estadoFederativo":"Veracruz","codigoPostal":"91000","pais":"México","latitud":19.17,"longitud":-96.13,"precioNoche":500,"capacidad":4,"numHabitaciones":2,"numBanos":1,"metrosCuadrados":70,"estado":"DISPONIBLE"}
 ```
 
-## Campos generados por el servidor
+Crear una unidad con POST /api/unidades:
 
-- IDs de todas las entidades.
-- Fechas de registro, creacion, envio o resena.
-- En reservas, `importeTotal` se calcula con el precio de la unidad cuando no se envia.
-- En pagos, `referenciaPago` se genera automaticamente y el cliente se obtiene desde la reserva.
-- En pagos, `fechaPago` se asigna al confirmar.
+```json
+{"propiedad":{"idPropiedad":1},"nombre":"Habitación jardín","tipo":"HABITACION","capacidad":2,"precioNoche":500,"estado":"DISPONIBLE"}
+```
 
-`UsuarioModel` aun no existe en el proyecto, por eso no hay JSON de usuarios en esta coleccion.
+Crear un bloqueo con POST /api/disponibilidades (usar otro intervalo para permitir la reserva de ejemplo):
+
+```json
+{"unidad":{"idUnidad":1},"fechaInicio":"2090-11-01T00:00:00","fechaFin":"2090-11-05T00:00:00","disponible":false}
+```
+
+Crear una reserva con POST /api/reservas:
+
+```json
+{"unidad":{"idUnidad":1},"cliente":{"id":2},"fechaEntrada":"2090-10-15T15:00:00","fechaSalida":"2090-10-17T11:00:00","estado":"CONFIRMADA"}
+```
+
+El servidor calcula importeTotal cuando no se envía.
+
+Registrar pago con POST /api/pagos:
+
+```json
+{"reserva":{"idReservacion":1},"importe":400,"fechaVencimiento":"2090-10-15","metodo":"TRANSFERENCIA","estado":"PENDIENTE"}
+```
+
+- POST /api/pagos/1/confirmar: registra el cobro.
+- POST /api/pagos/1/reembolsar: registra el reembolso de un pago confirmado.
+- GET /api/clientes/2/estado-cuenta: saldo del arrendatario.
+- GET /api/reportes/ocupacion?desde=2090-10-01&hasta=2090-11-01
+- GET /api/reportes/ingresos?desde=2026-10-01&hasta=2026-11-01 (por fecha real del cobro).
+- GET /api/reportes/morosidad
+- GET /actuator/health: estado de la aplicación.
+
+Los IDs, fechas de registro, referencia del pago y fecha de cobro se generan en el servidor. El cliente del pago se deriva de su reserva.

@@ -43,9 +43,10 @@ public class PagosService extends BaseCrudService<PagosModel> {
         if (pago.getReferenciaPago() == null || pago.getReferenciaPago().isBlank()) {
             pago.setReferenciaPago(generarReferencia());
         }
-        if (anterior != null && pago.getCreatedAt() == null) {
+        if (anterior != null) {
             pago.setReferenciaPago(anterior.getReferenciaPago());
             pago.setCreatedAt(anterior.getCreatedAt());
+            pago.setFechaPago(anterior.getFechaPago());
         }
         if (pago.getFechaVencimiento() == null) {
             throw new IllegalArgumentException("La fecha de vencimiento es obligatoria");
@@ -56,6 +57,10 @@ public class PagosService extends BaseCrudService<PagosModel> {
         if (pago.getImporte() == null || pago.getImporte().signum() <= 0) {
             throw new IllegalArgumentException("El importe debe ser mayor que cero");
         }
+        if (anterior != null && (anterior.getEstado() == EstadoPago.PAGADO || anterior.getEstado() == EstadoPago.REEMBOLSADO)
+                && (anterior.getImporte().compareTo(pago.getImporte()) != 0
+                || !anterior.getReserva().getIdReservacion().equals(reserva.getIdReservacion())))
+            throw new IllegalArgumentException("No se puede cambiar el importe o reserva de un pago confirmado");
         if (pago.getEstado() == null) pago.setEstado(EstadoPago.PENDIENTE);
         if (requiereAplicacion(pago.getEstado())) {
             BigDecimal totalAplicado = pagoRepository.totalAplicado(reserva.getIdReservacion(), pago.getIdPago());
@@ -79,9 +84,13 @@ public class PagosService extends BaseCrudService<PagosModel> {
         if (pago.getEstado() != EstadoPago.PENDIENTE && pago.getEstado() != EstadoPago.EN_PROCESO) {
             throw new IllegalArgumentException("Solo se puede confirmar un pago pendiente o en proceso");
         }
+        validarReserva(resolverReserva(pago, null));
+        BigDecimal aplicado = pagoRepository.totalAplicado(pago.getReserva().getIdReservacion(), id);
+        if (aplicado.add(pago.getImporte()).compareTo(pago.getReserva().getImporteTotal()) > 0)
+            throw new IllegalArgumentException("El total de pagos supera el importe de la reserva");
         pago.setEstado(EstadoPago.PAGADO);
         pago.setFechaPago(LocalDate.now());
-        return save(pago);
+        return pagoRepository.save(pago);
     }
 
     @Transactional
@@ -91,7 +100,7 @@ public class PagosService extends BaseCrudService<PagosModel> {
             throw new IllegalArgumentException("Solo se puede reembolsar un pago confirmado");
         }
         pago.setEstado(EstadoPago.REEMBOLSADO);
-        return save(pago);
+        return pagoRepository.save(pago);
     }
 
     @Transactional
@@ -115,7 +124,7 @@ public class PagosService extends BaseCrudService<PagosModel> {
     }
 
     private void validarReserva(ReservaModel reserva) {
-        if (reserva.getEstado() == null || "CANCELADA".equals(reserva.getEstado())) {
+        if (reserva.getEstado() == null || java.util.Set.of("CANCELADA", "RECHAZADA").contains(reserva.getEstado())) {
             throw new IllegalArgumentException("No se puede registrar un pago para una reserva cancelada");
         }
         if (reserva.getCliente() == null || reserva.getCliente().getId() == null) {

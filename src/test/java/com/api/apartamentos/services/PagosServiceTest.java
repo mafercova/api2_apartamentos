@@ -90,6 +90,48 @@ class PagosServiceTest {
         assertEquals("Transición de pago no permitida: PAGADO -> PENDIENTE", exception.getMessage());
     }
 
+    @Test
+    void confirmaPagoPendienteSinDependerDeIdentidadJpa() {
+        PagosModel pago = nuevoPago(); pago.setIdPago(8L); pago.setReserva(reserva); pago.setImporte(new BigDecimal("1000.00"));
+        when(pagoRepository.findById(8L)).thenReturn(Optional.of(pago));
+        when(pagoRepository.totalAplicado(3L, 8L)).thenReturn(BigDecimal.ZERO);
+        when(pagoRepository.save(any(PagosModel.class))).thenAnswer(i -> i.getArgument(0));
+        assertEquals(PagosModel.EstadoPago.PAGADO, service.confirmar(8L).getEstado());
+        assertNotNull(pago.getFechaPago());
+    }
+
+    @Test
+    void conservaFechaYReferenciaAlEditarPagoConfirmado() {
+        PagosModel anterior = nuevoPago();
+        anterior.setIdPago(8L);
+        anterior.setReserva(reserva);
+        anterior.setImporte(new BigDecimal("1000.00"));
+        anterior.setEstado(PagosModel.EstadoPago.PAGADO);
+        anterior.setFechaPago(LocalDate.of(2026, 9, 1));
+        anterior.setReferenciaPago("PAG-ORIGINAL");
+        anterior.setCreatedAt(LocalDateTime.of(2026, 9, 1, 10, 0));
+        when(pagoRepository.findById(8L)).thenReturn(Optional.of(anterior));
+        when(pagoRepository.totalAplicado(3L, 8L)).thenReturn(BigDecimal.ZERO);
+        when(pagoRepository.save(any(PagosModel.class))).thenAnswer(i -> i.getArgument(0));
+        PagosModel cambio = nuevoPago();
+        cambio.setIdPago(8L);
+        cambio.setImporte(new BigDecimal("1000.00"));
+        cambio.setEstado(PagosModel.EstadoPago.PAGADO);
+        cambio.setFechaPago(LocalDate.of(2026, 10, 14));
+        cambio.setReferenciaPago("PAG-OTRA");
+        cambio.setCreatedAt(LocalDateTime.now());
+        PagosModel guardado = service.save(cambio);
+        assertEquals(LocalDate.of(2026, 9, 1), guardado.getFechaPago());
+        assertEquals("PAG-ORIGINAL", guardado.getReferenciaPago());
+        assertEquals(anterior.getCreatedAt(), guardado.getCreatedAt());
+    }
+
+    @Test
+    void rechazaPagoDeReservaRechazada() {
+        reserva.setEstado("RECHAZADA");
+        assertThrows(IllegalArgumentException.class, () -> service.save(nuevoPago()));
+    }
+
     private PagosModel nuevoPago() {
         PagosModel pago = new PagosModel();
         ReservaModel referencia = new ReservaModel();

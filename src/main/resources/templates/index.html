@@ -8,7 +8,7 @@
     <section class="hero-band mb-5">
         <div>
             <p class="eyebrow">CENTRO DE OPERACIONES</p>
-            <h1>Todo tu centro de operaciones,<br><span>en una sola mirada.</span></h1>
+            <h1>Administración de apartamentos</h1>
             <p class="hero-copy">Administra propiedades, clientes y disponibilidad desde un espacio claro y conectado.</p>
         </div>
         <div class="hero-note"><span class="status-dot"></span><span>Panel operativo activo</span></div>
@@ -28,7 +28,7 @@
         </div>
     </section>
     <section class="row g-5">
-        <div class="col-lg-7">
+        <div class="col-lg-7"><div class="panel p-4 h-100">
             <div class="section-heading"><div><p class="eyebrow">INVENTARIO</p><h2>Propiedades recientes</h2></div><a class="text-link" th:href="@{/propiedades}">Ver todas →</a></div>
             <div th:if="${#lists.isEmpty(propiedadesRecientes)}" class="empty-state">Todavía no hay propiedades registradas.</div>
             <div th:each="propiedad : ${propiedadesRecientes}" class="list-row">
@@ -36,15 +36,15 @@
                 <div class="flex-grow-1"><strong th:text="${propiedad.titulo}">Propiedad</strong><small th:text="${propiedad.ciudad + ' · ' + propiedad.tipo}">Ciudad · Tipo</small></div>
                 <span class="badge-status" th:text="${propiedad.estado}">DISPONIBLE</span>
             </div>
-        </div>
-        <div class="col-lg-5">
+        </div></div>
+        <div class="col-lg-5"><div class="panel p-4 h-100">
             <div class="section-heading"><div><p class="eyebrow">CONTACTOS</p><h2>Clientes recientes</h2></div><a class="text-link" th:href="@{/clientes}">Ver todos →</a></div>
             <div th:if="${#lists.isEmpty(clientesRecientes)}" class="empty-state">Todavía no hay clientes registrados.</div>
             <div th:each="cliente : ${clientesRecientes}" class="list-row">
                 <div class="initials" th:text="${#strings.substring(cliente.nombres, 0, 1) + #strings.substring(cliente.apellidos, 0, 1)}">CL</div>
                 <div class="flex-grow-1"><strong th:text="${cliente.nombres + ' ' + cliente.apellidos}">Cliente</strong><small th:text="${cliente.email}">email</small></div>
             </div>
-        </div>
+        </div></div>
     </section>
 </main>
 <footer th:replace="~{fragments/layout :: footer}"></footer>

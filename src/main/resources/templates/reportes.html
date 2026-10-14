@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Reportes')}"></head>
+<body class="app-body"><nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="app-shell py-5">
+<header class="page-header"><div><p class="eyebrow">ADMINISTRACIÓN</p><h1>Reportes y estados de cuenta</h1><p class="page-lede">Ocupación, ingresos y seguimiento de deudores.</p></div></header>
+<div class="panel p-4 mb-4"><h2 class="h5 mb-3">Consultar periodo</h2><form method="get" class="report-filter"><label for="desde">Desde (incluido)<input id="desde" class="form-control mt-2" type="date" name="desde" th:value="${desde}" required></label><label for="hasta">Hasta (excluido)<input id="hasta" class="form-control mt-2" type="date" name="hasta" th:value="${hasta}" required></label><button class="btn btn-accent">Consultar</button></form></div>
+<p th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></p>
+<th:block th:if="${ocupacion != null}">
+<div class="row g-4 mb-4"><div class="col-md-6"><div class="metric-panel"><span class="metric-label">OCUPACIÓN DEL PERIODO</span><strong th:text="${ocupacion.porcentaje() + '%'}"></strong><span class="text-muted" th:text="${ocupacion.nochesOcupadas() + ' de ' + ocupacion.nochesTotales() + ' noches'}"></span></div></div><div class="col-md-6"><div class="metric-panel metric-mint"><span class="metric-label">INGRESOS COBRADOS</span><strong th:text="${'$' + ingresos.total()}"></strong><span class="text-muted">Pagos confirmados en el periodo.</span></div></div></div>
+<section class="panel p-3 p-md-4" data-catalog><div class="catalog-header"><div><h2 class="h5">Estados de cuenta y morosidad</h2><p class="text-muted small mb-0">Saldos actuales. Vencido identifica la deuda en mora.</p></div><label class="search-box"><span class="visually-hidden">Buscar cliente</span><input type="search" class="form-control form-control-sm" data-search placeholder="Buscar cliente…"></label></div>
+<div class="table-responsive"><table class="table table-hover"><thead><tr><th>Cliente</th><th>Cargos</th><th>Pagado</th><th>Saldo</th><th>Vencido</th></tr></thead><tbody>
+<tr data-record th:each="c : ${cuentas}"><td th:text="${c.cliente()}"></td><td th:text="${'$' + c.cargos()}"></td><td th:text="${'$' + c.pagado()}"></td><td th:text="${'$' + c.saldo()}"></td><td th:text="${'$' + c.vencido()}" th:classappend="${c.vencido().signum() > 0} ? 'text-danger fw-bold' : ''"></td></tr>
+<tr th:if="${#lists.isEmpty(cuentas)}"><td colspan="5" class="empty-table">Sin cargos activos.</td></tr><tr data-no-results hidden><td colspan="5" class="empty-table">No se encontraron clientes.</td></tr>
+</tbody></table></div></section></th:block>
+</main><footer th:replace="~{fragments/layout :: footer}"></footer><script th:replace="~{fragments/layout :: scripts}"></script></body></html>

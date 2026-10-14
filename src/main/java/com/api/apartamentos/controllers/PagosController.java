@@ -18,11 +18,9 @@ public class PagosController {
     @PostMapping public ResponseEntity<PagosModel> create(@Valid @RequestBody PagosModel value) { return ResponseEntity.status(201).body(service.save(value)); }
     @PutMapping("/{id}") public ResponseEntity<PagosModel> update(@PathVariable Long id, @Valid @RequestBody PagosModel value) {
         return service.findById(id).map(existing -> {
-            existing.setImporte(value.getImporte());
-            existing.setFechaVencimiento(value.getFechaVencimiento());
-            existing.setMetodo(value.getMetodo());
-            existing.setEstado(value.getEstado());
-            return ResponseEntity.ok(service.save(existing));
+            value.setIdPago(id);
+            value.setReserva(existing.getReserva());
+            return ResponseEntity.ok(service.save(value));
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
     @PostMapping("/{id}/confirmar") public ResponseEntity<PagosModel> confirm(@PathVariable Long id) { return ResponseEntity.ok(service.confirmar(id)); }

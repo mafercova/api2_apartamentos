@@ -26,7 +26,12 @@ public class ClienteService extends BaseCrudService<ClienteModel> {
     }
 
     public ClienteModel saveCliente(ClienteModel cliente) {
-        if (cliente.getPassword() != null && !cliente.getPassword().startsWith("$2a$")) {
+        if (cliente.getPassword() == null || cliente.getPassword().isBlank()) {
+            if (cliente.getId() == null) throw new IllegalArgumentException("La contraseña es obligatoria al crear un cliente");
+            ClienteModel anterior = findById(cliente.getId()).orElseThrow(() -> new IllegalArgumentException("El cliente no existe"));
+            cliente.setPassword(anterior.getPassword());
+        }
+        if (cliente.getPassword() != null && !cliente.getPassword().matches("^\\$2[aby]\\$.*")) {
             cliente.setPassword(passwordEncoder.encode(cliente.getPassword()));
         }
         return save(cliente);

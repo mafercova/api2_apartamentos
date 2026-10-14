@@ -1,0 +1,384 @@
+{
+  "info": {
+    "_postman_id": "d5b5f0fa-41e8-42f4-b967-98bba263af22",
+    "name": "API Apartamentos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Peticiones de Apartamentos. Configurar identificadores reales antes de enviar escrituras. No contiene capturas ni respuestas guardadas."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "id",
+      "value": "1"
+    },
+    {
+      "key": "clienteId",
+      "value": "1"
+    },
+    {
+      "key": "unidadId",
+      "value": "1"
+    },
+    {
+      "key": "reservaId",
+      "value": "1"
+    },
+    {
+      "key": "pagoId",
+      "value": "1"
+    },
+    {
+      "key": "desde",
+      "value": "2026-10-01"
+    },
+    {
+      "key": "hasta",
+      "value": "2026-11-01"
+    }
+  ],
+  "item": [
+    {
+      "name": "clientes",
+      "item": [
+        {
+          "name": "Consultar todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/clientes"
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/clientes/{{id}}"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "propiedades",
+      "item": [
+        {
+          "name": "Consultar todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/propiedades"
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/propiedades/{{id}}"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "unidades",
+      "item": [
+        {
+          "name": "Consultar todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/unidades"
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/unidades/{{id}}"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "reservas",
+      "item": [
+        {
+          "name": "Consultar todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/reservas"
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/reservas/{{id}}"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "pagos",
+      "item": [
+        {
+          "name": "Consultar todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/pagos"
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/pagos/{{id}}"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "disponibilidades",
+      "item": [
+        {
+          "name": "Consultar todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/disponibilidades"
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/disponibilidades/{{id}}"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "propiedad-imagenes",
+      "item": [
+        {
+          "name": "Consultar todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/propiedad-imagenes"
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/propiedad-imagenes/{{id}}"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "resenas",
+      "item": [
+        {
+          "name": "Consultar todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/resenas"
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/resenas/{{id}}"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "notificaciones",
+      "item": [
+        {
+          "name": "Consultar todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/notificaciones"
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/notificaciones/{{id}}"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reportes",
+      "item": [
+        {
+          "name": "Ocupación",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/reportes/ocupacion?desde={{desde}}&hasta={{hasta}}"
+          },
+          "response": []
+        },
+        {
+          "name": "Ingresos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/reportes/ingresos?desde={{desde}}&hasta={{hasta}}"
+          },
+          "response": []
+        },
+        {
+          "name": "Morosidad",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/reportes/morosidad"
+          },
+          "response": []
+        },
+        {
+          "name": "Estado de cuenta",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/clientes/{{clienteId}}/estado-cuenta"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Registro y pagos (usar datos de prueba)",
+      "item": [
+        {
+          "name": "Registrar cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/clientes",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"CLIENTE\",\n  \"nombres\": \"Ana\",\n  \"apellidos\": \"Pérez\",\n  \"email\": \"ana.prueba@example.com\",\n  \"password\": \"ejemplo-local\",\n  \"estatus\": \"ACTIVO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar reserva",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/reservas",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"unidad\": {\n    \"idUnidad\": {{unidadId}}\n  },\n  \"cliente\": {\n    \"id\": {{clienteId}}\n  },\n  \"fechaEntrada\": \"2090-10-15T15:00:00\",\n  \"fechaSalida\": \"2090-10-17T11:00:00\",\n  \"estado\": \"CONFIRMADA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar pago",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/pagos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reserva\": {\n    \"idReservacion\": {{reservaId}}\n  },\n  \"importe\": 400,\n  \"fechaVencimiento\": \"2090-10-15\",\n  \"metodo\": \"TRANSFERENCIA\",\n  \"estado\": \"PENDIENTE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar pago",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/api/pagos/{{pagoId}}/confirmar"
+          },
+          "response": []
+        },
+        {
+          "name": "Reembolsar pago",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/api/pagos/{{pagoId}}/reembolsar"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

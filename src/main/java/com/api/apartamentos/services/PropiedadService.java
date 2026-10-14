@@ -31,5 +31,4 @@ public class PropiedadService extends BaseCrudService<PropiedadModel> {
         deleteById(id);
     }
 
-    // ACTIVIDAD: Crea un metodo Recuperar propiedades por tipo
 }
